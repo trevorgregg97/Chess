@@ -3,7 +3,7 @@ package Chess.Bot;
 import Chess.Pieces.Piece;
 
 public class Evaluator {
-	public static int evaluateBoard(Piece[][] board) {
+	public static int evaluateBoard(Piece[][] board, boolean isWhite) {
 		assert(board.length == 8);
 		assert(board[0].length == 8);
 		int eval = 0;

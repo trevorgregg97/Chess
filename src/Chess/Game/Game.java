@@ -7,16 +7,21 @@ import Chess.Game.Board.Color;
 import Chess.Pieces.Piece;
 
 public class Game {
-	private boolean isWhiteTurn;
+	public boolean isWhiteTurn;
 	private Board board;
-	
-	public boolean isGameOver() {
-		return false;
-	}
 	
 	public Game() {
 		isWhiteTurn = true;
 		board = new Board();
+	}
+	
+	private Game(boolean isWhiteTurn, Board board) {
+		this.isWhiteTurn = isWhiteTurn;
+		this.board = board;
+	}
+	
+	public boolean isGameOver() {
+		return false;
 	}
 	
 	public boolean makeMove(Move move) {
@@ -26,17 +31,26 @@ public class Game {
 		}
 		return madeMove;
 	}
+	
 	@Override
 	public String toString() {
 		String turn = isWhiteTurn ? "w" : "b";
 		return board + " " + turn ;
 	}
+	
 	public Piece[][] getBoard(){
 		return board.board;
 	}
 	
+	public void undoMove() {
+		board.undoMove();
+	}
+	
+	public Game copy() {
+		return new Game(isWhiteTurn, board.copy());
+	}
+	
 	public List<Move> generateMoves(){
-		//Could keep a list of all pieces? 
 		Piece[][] pieces = getBoard();
 		List<Move> moves = new ArrayList<Move>();
 		for(int i = 0; i < 8; i++) {

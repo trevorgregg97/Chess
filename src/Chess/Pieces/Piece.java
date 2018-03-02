@@ -14,4 +14,5 @@ public abstract class Piece {
 	
 	public abstract boolean canMakeMove(Piece[][] p, Move m );
 	public abstract List<Move> generateMoves(int row, int col, Piece[][] board);
+	public abstract Piece copy();
 }
