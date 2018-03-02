@@ -1,3 +1,4 @@
+package Chess;
 
 public class Game {
 	private boolean isWhiteTurn;
@@ -13,11 +14,11 @@ public class Game {
 	}
 	
 	public boolean makeMove(Move move) {
-		//Verify move is legal then apply move
 		return(board.applyMove(move));
 	}
 	@Override
 	public String toString() {
-		return isWhiteTurn + " " + board;
+		String turn = isWhiteTurn ? "w" : "b";
+		return board + " " + turn ;
 	}
 }
