@@ -1,4 +1,4 @@
-package Chess;
+package Chess.Game;
 import Chess.Pieces.*;
 
 public class Board {
@@ -11,7 +11,7 @@ public class Board {
 			board[6][i] = new Pawn(Color.BLACK);
 		}
 	}
-	private Piece[][] board;
+	public Piece[][] board;
 	
 	public Board() {
 		board = new Piece[8][8];
@@ -23,7 +23,6 @@ public class Board {
 		//check if its their piece or move
 		Piece pieceToMove = board[move.rowStart][move.colStart];
 		move.piece = pieceToMove;
-		System.out.println(pieceToMove);
 		if(pieceToMove == null) {
 			return false;
 		}
