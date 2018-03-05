@@ -14,16 +14,16 @@ public class SimpleSearcher {
 	}
 	public static BestMove<Move> minimax(Game game, Piece[][] board, int depth) {
 		if(depth == 0) {
-			return new BestMove<Move>(Evaluator.evaluateBoard(board,game.isWhiteTurn));
+			return new BestMove<>(Evaluator.evaluateBoard(board,game.isWhiteTurn));
 		}
 		
 		List<Move> moves = game.generateMoves();
 		if(moves.isEmpty()) {
-			return new BestMove<Move>(0);
+			return new BestMove<>(0);
 			//Change to draw or mate
 		}
 		
-		BestMove<Move> best = new BestMove<Move>(-Integer.MAX_VALUE);
+		BestMove<Move> best = new BestMove<>(-Integer.MAX_VALUE);
 		for(Move move: moves) {
 			Game newGame = game.copy();
 			newGame.makeMove(move);

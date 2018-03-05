@@ -2,3 +2,6 @@ bin/
 .project
 .settings
 .classpath
+out/
+.idea/
+Chess.iml

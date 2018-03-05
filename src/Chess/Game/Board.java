@@ -28,6 +28,8 @@ public class Board {
 			board[1][i] = new Pawn(Color.WHITE);
 			board[6][i] = new Pawn(Color.BLACK);
 		}
+		board[0][4] = new King(Color.WHITE);
+		board[7][4] = new King(Color.BLACK);
 	}
 	
 	public void undoMove() {
@@ -44,9 +46,6 @@ public class Board {
 		Piece pieceToMove = board[move.rowStart][move.colStart];
 		move.piece = pieceToMove;
 		if(pieceToMove == null) {
-			return false;
-		}
-		if(!pieceToMove.canMakeMove(board,move)) {
 			return false;
 		}
 		//Check if would put into check someone
@@ -66,6 +65,7 @@ public class Board {
 		
 		board[move.rowStart][move.colStart] = null;
 		board[move.rowEnd][move.colEnd] = move.piece;
+		move.piece.hasMoved = true;
 		return true;
 	}
 	public Board copy() {

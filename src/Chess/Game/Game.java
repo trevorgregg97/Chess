@@ -35,7 +35,10 @@ public class Game {
 	@Override
 	public String toString() {
 		String turn = isWhiteTurn ? "w" : "b";
-		return board + " " + turn ;
+		String castle = "KQkq";
+		String enpessante = "-";
+		String moves = "0 0";
+		return board + " " + turn + " " + castle + " " + enpessante + " " + moves;
 	}
 	
 	public Piece[][] getBoard(){
