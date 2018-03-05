@@ -1,7 +1,9 @@
 package Chess.Pieces;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import Chess.Game.Board.Color;
 import Chess.Game.Move;
@@ -55,5 +57,12 @@ public class Pawn extends Piece {
 		pawn.value = value;
 		pawn.hasMoved = hasMoved;
 		return pawn;
+	}
+
+	@Override
+	public Set<Move> generateTheatenedSquares() {
+		Set<Move> threats = new HashSet<>();
+		threats.add(e);
+		return threats;
 	}
 }

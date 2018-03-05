@@ -1,14 +1,17 @@
 package Chess.Game;
 
+import Chess.Bot.Evaluator;
 import Chess.Bot.SimpleSearcher;
+import Chess.Game.Board.Color;
 
 public class GameRunner {
 	public static void main(String[] args) {
 		Game game = new Game();
-		System.out.println(game);
-//		for(int i = 0 ; i < 20; i++){
-//            Move move = SimpleSearcher.findBestMove(game,4);
-//            game.makeMove(move);
-//        }
+		for(int i = 0 ; i < 1; i++){
+            Move move = SimpleSearcher.findBestMove(game,1);
+            System.out.println(Evaluator.evaluateBoard(game.getBoard(), game.isWhiteTurn));
+            game.makeMove(move);
+            System.out.println(game);
+        }
 	}
 }
