@@ -8,7 +8,7 @@ import Chess.Pieces.Piece;
 
 public class Game {
 	public boolean isWhiteTurn;
-	private Board board;
+	public Board board;
 	
 	public Game() {
 		isWhiteTurn = true;
@@ -59,7 +59,8 @@ public class Game {
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
 				if(pieces[i][j] != null && pieces[i][j].color == (isWhiteTurn ? Color.WHITE : Color.BLACK)) {
-					moves.addAll(pieces[i][j].generateMoves(i, j,pieces));
+					Square pos = new Square(i,j);
+					moves.addAll(pieces[i][j].generateMoves(pos,pieces));
 				}
 			}
 		}

@@ -1,11 +1,14 @@
 package Chess.Game;
 import Chess.Pieces.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Board {
-	private int delRowStart, delRowEnd, delColStart, delColEnd;
+	private Square delStart, delEnd;
 	private Piece delPiece;
 	public Piece[][] board;
-	public static enum Color {
+	public enum Color {
 		WHITE, BLACK;
 	}
 	
@@ -14,13 +17,11 @@ public class Board {
 		fillBoard(board);
 	}
 	
-	private Board(Piece[][] board, Piece delPiece, int delRowStart, int delRowEnd, int delColStart, int delColEnd) {
+	private Board(Piece[][] board, Piece delPiece, Square delStart, Square delEnd) {
 		this.board = board;
 		this.delPiece = delPiece;
-		this.delRowStart = delRowStart;
-		this.delRowEnd = delRowEnd;
-		this.delColStart = delColStart;
-		this.delColEnd = delColEnd;
+		this.delEnd = delEnd;
+		this.delStart = delStart;
 	}
 	
 	private void fillBoard(Piece[][] board) {
@@ -33,6 +34,10 @@ public class Board {
 	}
 	
 	public void undoMove() {
+	    int delRowStart = delStart.row;
+	    int delColStart = delStart.col;
+	    int delRowEnd = delEnd.row;
+	    int delColEnd = delEnd.col;
 		Piece temp = board[delRowEnd][delColEnd];
 		if(delPiece != null) {
 			board[delRowEnd][delColEnd] = delPiece;
@@ -43,7 +48,7 @@ public class Board {
 	public boolean isLegal(Move move) {
 		//Check if someone is in check first
 		//check if its their piece or move
-		Piece pieceToMove = board[move.rowStart][move.colStart];
+		Piece pieceToMove = board[move.start.row][move.start.col];
 		move.piece = pieceToMove;
 		if(pieceToMove == null) {
 			return false;
@@ -57,17 +62,32 @@ public class Board {
 			return false;
 		}
 		//Save previous move to undo
-		delPiece = board[move.rowEnd][move.colEnd];
-		delRowStart = move.rowStart;
-		delRowEnd = move.rowEnd;
-		delColStart = move.colStart;
-		delColEnd = move.colEnd;
+        int rowStart = move.start.row;
+		int colStart = move.start.col;
+		int rowEnd = move.end.row;
+		int colEnd = move.end.col;
+
+		delPiece = board[rowEnd][colEnd];
+		delStart = new Square(rowStart,colStart);
+		delEnd = new Square(rowEnd,colEnd);
 		
-		board[move.rowStart][move.colStart] = null;
-		board[move.rowEnd][move.colEnd] = move.piece;
+		board[rowStart][colStart] = null;
+		board[rowEnd][colEnd] = move.piece;
 		move.piece.hasMoved = true;
 		return true;
 	}
+    //TODO USE THIS TO IMPLEMENT CHECK FOR CHECKS AND CHECK FOR CHECK AS NEEDED IN OTHER METHODS
+	public Set<Square> generateThreats(){
+	    Set<Square> threats = new HashSet<>();
+	    for(int i = 0; i < 8; i++){
+	        for(int j = 0; j < 8; j++){
+	            if(board[i][j] != null){
+                    threats.addAll(board[i][j].generateThreatenedSquares(new Square(i,j),board));
+                }
+            }
+        }
+        return threats;
+    }
 	public Board copy() {
 		Piece[][] copiedPieces = new Piece[8][8];
 		for(int i = 0 ; i < 8; i++) {
@@ -79,7 +99,7 @@ public class Board {
 		if(delPiece != null) {
 			newDelPiece = delPiece.copy();
 		}
-		return new Board(copiedPieces, newDelPiece, delRowStart, delRowEnd, delColStart, delColEnd);
+		return new Board(copiedPieces, newDelPiece,delStart, delEnd);
 	}
 	
 	@Override
@@ -88,7 +108,7 @@ public class Board {
 		String ret = "";
 		for(int i = 7; i >= 0; i--) {
 			int count = 0;
-			for(int j = 7; j >= 0; j--) {
+			for(int j = 0; j  < 8; j++) {
 				if(board[i][j] == null) {
 					count += 1;
 				}else if(count > 0) {

@@ -3,14 +3,12 @@ package Chess.Game;
 import Chess.Pieces.Piece;
 
 public class Move {
-	public int rowStart, colStart, rowEnd, colEnd;
+	public Square start,end;
 	public Piece piece;
 	public Piece[][] board;
-	public Move(int rowStart, int colStart, int rowEnd, int colEnd,Piece[][] board) {
-		this.colEnd = colEnd;
-		this.rowEnd = rowEnd;
-		this.colStart = colStart;
-		this.rowStart = rowStart;
+	public Move(Square start, Square end,Piece[][] board) {
+		this.start = start;
+		this.end = end;
 		this.board = board;
 	}
 	
@@ -19,7 +17,10 @@ public class Move {
 		if(piece == null) {
 			throw new NullPointerException();
 		}
-		
+		int rowEnd = end.row;
+		int colEnd = end.col;
+		int rowStart = start.row;
+		int colStart = start.col;
 		if(board[rowEnd][colEnd] == null) {
 			if(piece.toString().toLowerCase().equals("p")) {
 				return "" + (char) (colEnd + 97) + (rowEnd + 1);
