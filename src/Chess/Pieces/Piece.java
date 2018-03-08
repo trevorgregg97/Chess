@@ -5,6 +5,7 @@ import java.util.Set;
 import Chess.Game.Board.Color;
 import Chess.Game.Move;
 import Chess.Game.Square;
+import Chess.Game.Board;
 
 public abstract class Piece {
 	public Color color;
@@ -14,7 +15,7 @@ public abstract class Piece {
 	public Piece(Color color) {
 		this.color = color;
 	}
-	public abstract List<Move> generateMoves(Square pos, Piece[][] board);
+	public abstract List<Move> generateMoves(Square pos, Board gameBoard);
 	public abstract Piece copy();
 	public abstract Set<Square> generateThreatenedSquares(Square pos, Piece[][] board);
 }

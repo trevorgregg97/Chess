@@ -8,13 +8,17 @@ public class Board {
 	private Square delStart, delEnd;
 	private Piece delPiece;
 	public Piece[][] board;
+	public Square whiteKing;
+	public Square blackKing;
 	public enum Color {
 		WHITE, BLACK;
 	}
 	
 	public Board() {
 		board = new Piece[8][8];
-		fillBoard(board);
+		whiteKing = new Square(2,2);
+		blackKing = new Square(7,4);
+        fillBoard(board);
 	}
 	
 	private Board(Piece[][] board, Piece delPiece, Square delStart, Square delEnd) {
@@ -34,6 +38,7 @@ public class Board {
 	}
 	
 	public void undoMove() {
+	    //Check if need to swap king position TODO
 	    int delRowStart = delStart.row;
 	    int delColStart = delStart.col;
 	    int delRowEnd = delEnd.row;
@@ -54,14 +59,26 @@ public class Board {
 			return false;
 		}
 		//Check if would put into check someone
+        if(inCheck(whiteKing) || inCheck(blackKing)){
+		    return false;
+        }
 		return true;
 	}
-	
+
+	public boolean inCheck(Square kingPos){
+	    if(generateThreats().contains(kingPos)){
+	        System.out.println("In check!");
+	        return true;
+        }
+        return false;
+    }
+
 	public boolean applyMove(Move move) {
 		if(!isLegal(move)) {
 			return false;
 		}
 		//Save previous move to undo
+        //TODO SAVE IF IS KING SO CAN UNDO THAT AS WELL
         int rowStart = move.start.row;
 		int colStart = move.start.col;
 		int rowEnd = move.end.row;
@@ -76,7 +93,9 @@ public class Board {
 		move.piece.hasMoved = true;
 		return true;
 	}
+
     //TODO USE THIS TO IMPLEMENT CHECK FOR CHECKS AND CHECK FOR CHECK AS NEEDED IN OTHER METHODS
+    //TODO CHANGE TO ONLY GET THREATS FROM OTHER COLOR
 	public Set<Square> generateThreats(){
 	    Set<Square> threats = new HashSet<>();
 	    for(int i = 0; i < 8; i++){
@@ -88,6 +107,7 @@ public class Board {
         }
         return threats;
     }
+
 	public Board copy() {
 		Piece[][] copiedPieces = new Piece[8][8];
 		for(int i = 0 ; i < 8; i++) {

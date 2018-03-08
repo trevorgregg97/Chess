@@ -60,7 +60,7 @@ public class Game {
 			for(int j = 0; j < 8; j++) {
 				if(pieces[i][j] != null && pieces[i][j].color == (isWhiteTurn ? Color.WHITE : Color.BLACK)) {
 					Square pos = new Square(i,j);
-					moves.addAll(pieces[i][j].generateMoves(pos,pieces));
+					moves.addAll(pieces[i][j].generateMoves(pos,board));
 				}
 			}
 		}

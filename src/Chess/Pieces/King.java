@@ -17,7 +17,8 @@ public class King extends Piece{
     }
 
     @Override
-    public List<Move> generateMoves(Square pos, Piece[][] board) {
+    public List<Move> generateMoves(Square pos, Board gameBoard) {
+        Piece[][] board = gameBoard.board;
         int row = pos.row;
         int col = pos.col;
         //TODO ADD CAPTURING AND 4 OTHER SPOTS KING CAN MOVE TO
