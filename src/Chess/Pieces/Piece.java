@@ -17,5 +17,5 @@ public abstract class Piece {
 	}
 	public abstract List<Move> generateMoves(Square pos, Board gameBoard);
 	public abstract Piece copy();
-	public abstract Set<Square> generateThreatenedSquares(Square pos, Piece[][] board);
+	public abstract List<Move> generateThreatenedSquares(Square pos, Piece[][] board);
 }

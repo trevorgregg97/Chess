@@ -1,9 +1,7 @@
 package Chess.Pieces;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import Chess.Game.Board;
 import Chess.Game.Board.Color;
@@ -65,10 +63,10 @@ public class Pawn extends Piece {
 	}
 
     @Override
-    public Set<Square> generateThreatenedSquares(Square pos, Piece[][] board) {
-        Set<Square> threats = new HashSet<>();
-        threats.add(new Square(pos.row + 1,pos.col + 1));
-        threats.add(new Square(pos.row + 1, pos.col -1));
+    public List<Move> generateThreatenedSquares(Square pos, Piece[][] board) {
+        List<Move> threats = new LinkedList<>();
+        threats.add(new Move(pos,new Square(pos.row + 1,pos.col + 1),board,this));
+        threats.add(new Move(pos,new Square(pos.row + 1, pos.col -1),board,this));
         return threats;
     }
 }

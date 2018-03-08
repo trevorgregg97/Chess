@@ -11,6 +11,12 @@ public class Move {
 		this.end = end;
 		this.board = board;
 	}
+	public Move(Square start, Square end,Piece[][] board,Piece piece) {
+		this.start = start;
+		this.end = end;
+		this.board = board;
+		this.piece = piece;
+	}
 	
 	@Override
 	public String toString() {

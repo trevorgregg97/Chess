@@ -4,10 +4,8 @@ import Chess.Game.Board;
 import Chess.Game.Move;
 import Chess.Game.Square;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public class King extends Piece{
 
@@ -22,7 +20,7 @@ public class King extends Piece{
         int row = pos.row;
         int col = pos.col;
         //TODO ADD CAPTURING AND 4 OTHER SPOTS KING CAN MOVE TO
-        List<Move> moves = new ArrayList<Move>(4);
+        List<Move> moves = new LinkedList<>();
         if(row + 1 < 8 && board[row+1][col] == null){
             Move oneForward = new Move(pos,new Square(row+1,col),board);
             moves.add(oneForward);
@@ -54,17 +52,17 @@ public class King extends Piece{
     }
 
     @Override
-    public Set<Square> generateThreatenedSquares(Square pos, Piece[][] board) {
-        Set<Square> threats = new HashSet<>();
+    public List<Move> generateThreatenedSquares(Square pos, Piece[][] board) {
+        List<Move> threats = new LinkedList<>();
         //Just manually adding every square the king can attack
-        threats.add(new Square(pos.row,pos.col + 1));
-        threats.add(new Square(pos.row + 1, pos.col));
-        threats.add(new Square(pos.row - 1, pos.col));
-        threats.add(new Square(pos.row,pos.col - 1));
-        threats.add(new Square(pos.row + 1, pos.col + 1));
-        threats.add(new Square(pos.row - 1, pos.col -1));
-        threats.add(new Square(pos.row + 1, pos.col -1));
-        threats.add(new Square(pos.row - 1, pos.col + 1));
+        threats.add(new Move(pos,new Square(pos.row,pos.col + 1),board,this));
+        threats.add(new Move(pos,new Square(pos.row + 1, pos.col),board,this));
+        threats.add(new Move(pos,new Square(pos.row - 1, pos.col),board,this));
+        threats.add(new Move(pos,new Square(pos.row,pos.col - 1),board,this));
+        threats.add(new Move(pos,new Square(pos.row + 1, pos.col + 1),board,this));
+        threats.add(new Move(pos,new Square(pos.row - 1, pos.col -1),board,this));
+        threats.add(new Move(pos,new Square(pos.row + 1, pos.col -1),board,this));
+        threats.add(new Move(pos,new Square(pos.row - 1, pos.col + 1),board,this));
         return threats;
     }
 

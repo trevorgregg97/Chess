@@ -7,34 +7,34 @@ import Chess.Game.Board.Color;
 import Chess.Pieces.Piece;
 
 public class Game {
-	public boolean isWhiteTurn;
-	public Board board;
+	private Board board;
 	
 	public Game() {
-		isWhiteTurn = true;
 		board = new Board();
 	}
 	
-	private Game(boolean isWhiteTurn, Board board) {
-		this.isWhiteTurn = isWhiteTurn;
+	private Game( Board board) {
 		this.board = board;
 	}
 	
 	public boolean isGameOver() {
-		return false;
+		if(generateMoves().size() == 0){
+		    return true;
+        }
+        return false;
 	}
 	
 	public boolean makeMove(Move move) {
-		boolean madeMove = board.applyMove(move);
-		if(madeMove) {
-			isWhiteTurn = !isWhiteTurn;
-		}
+		boolean madeMove = board.applyMove(move,true);
 		return madeMove;
 	}
-	
+
+	public boolean isWhiteTurn(){
+	    return board.isWhiteTurn;
+    }
 	@Override
 	public String toString() {
-		String turn = isWhiteTurn ? "w" : "b";
+		String turn = board.isWhiteTurn ? "w" : "b";
 		String castle = "KQkq";
 		String enpessante = "-";
 		String moves = "0 0";
@@ -50,17 +50,23 @@ public class Game {
 	}
 	
 	public Game copy() {
-		return new Game(isWhiteTurn, board.copy());
+		return new Game(board.copy());
 	}
-	
+
 	public List<Move> generateMoves(){
 		Piece[][] pieces = getBoard();
 		List<Move> moves = new ArrayList<Move>();
 		for(int i = 0; i < 8; i++) {
 			for(int j = 0; j < 8; j++) {
-				if(pieces[i][j] != null && pieces[i][j].color == (isWhiteTurn ? Color.WHITE : Color.BLACK)) {
+				if(pieces[i][j] != null && pieces[i][j].color == (board.isWhiteTurn ? Color.WHITE : Color.BLACK)) {
 					Square pos = new Square(i,j);
-					moves.addAll(pieces[i][j].generateMoves(pos,board));
+					List<Move> pieceMoves = pieces[i][j].generateMoves(pos,board);
+					for(int k = 0; k < pieceMoves.size(); k++) {
+                        Move move = pieceMoves.get(k);
+                        if(board.isLegal(move,false)){
+                            moves.add(move);
+                        }
+                    }
 				}
 			}
 		}

@@ -2,6 +2,7 @@ package Chess.Game;
 import Chess.Pieces.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Board {
@@ -10,6 +11,8 @@ public class Board {
 	public Piece[][] board;
 	public Square whiteKing;
 	public Square blackKing;
+	public boolean isWhiteTurn;
+
 	public enum Color {
 		WHITE, BLACK;
 	}
@@ -38,7 +41,6 @@ public class Board {
 	}
 	
 	public void undoMove() {
-	    //Check if need to swap king position TODO
 	    int delRowStart = delStart.row;
 	    int delColStart = delStart.col;
 	    int delRowEnd = delEnd.row;
@@ -46,21 +48,37 @@ public class Board {
 		Piece temp = board[delRowEnd][delColEnd];
 		if(delPiece != null) {
 			board[delRowEnd][delColEnd] = delPiece;
-		}
+		}else{
+		    board[delRowEnd][delColEnd] = null;
+        }
 		board[delRowStart][delColStart] = temp;
+		isWhiteTurn = !isWhiteTurn;
+		if(temp.toString().equals("k")){
+		    blackKing = delStart;
+        }else if(temp.toString().equals("K")){
+		    whiteKing = delStart;
+        }
 	}
 	
-	public boolean isLegal(Move move) {
-		//Check if someone is in check first
-		//check if its their piece or move
+	public boolean isLegal(Move move, boolean isGeneratingThreat) {
 		Piece pieceToMove = board[move.start.row][move.start.col];
 		move.piece = pieceToMove;
 		if(pieceToMove == null) {
 			return false;
 		}
-		//Check if would put into check someone
-        if(inCheck(whiteKing) || inCheck(blackKing)){
-		    return false;
+		//Check if already in Check
+        if(!isGeneratingThreat){
+            if(inCheck(whiteKing) || inCheck(blackKing)){
+                return false;
+            }
+            //Check if this move would put themselves into check
+            applyMove(move,false);
+            Square checkForCheckKing = isWhiteTurn ? whiteKing : blackKing;
+            if(inCheck(checkForCheckKing)){
+                undoMove();
+                return false;
+            }
+            undoMove();
         }
 		return true;
 	}
@@ -73,12 +91,10 @@ public class Board {
         return false;
     }
 
-	public boolean applyMove(Move move) {
-		if(!isLegal(move)) {
+	public boolean applyMove(Move move,boolean checkIfLegal) {
+		if(checkIfLegal && !isLegal(move,false)) {
 			return false;
 		}
-		//Save previous move to undo
-        //TODO SAVE IF IS KING SO CAN UNDO THAT AS WELL
         int rowStart = move.start.row;
 		int colStart = move.start.col;
 		int rowEnd = move.end.row;
@@ -91,17 +107,22 @@ public class Board {
 		board[rowStart][colStart] = null;
 		board[rowEnd][colEnd] = move.piece;
 		move.piece.hasMoved = true;
+		isWhiteTurn = !isWhiteTurn;
 		return true;
 	}
 
-    //TODO USE THIS TO IMPLEMENT CHECK FOR CHECKS AND CHECK FOR CHECK AS NEEDED IN OTHER METHODS
-    //TODO CHANGE TO ONLY GET THREATS FROM OTHER COLOR
 	public Set<Square> generateThreats(){
 	    Set<Square> threats = new HashSet<>();
 	    for(int i = 0; i < 8; i++){
 	        for(int j = 0; j < 8; j++){
-	            if(board[i][j] != null){
-                    threats.addAll(board[i][j].generateThreatenedSquares(new Square(i,j),board));
+	            if(board[i][j] != null && board[i][j].color == (isWhiteTurn ? Color.WHITE : Color.BLACK)){
+	                Set<Square> pieceThreats = new HashSet<>();
+                    List<Move> pieceThreatsList =  board[i][j].generateThreatenedSquares(new Square(i,j), board);
+                    for(int k = 0; k < pieceThreatsList.size(); k++){
+                        if(isLegal(pieceThreatsList.get(k),true)){
+                            pieceThreats.add(pieceThreatsList.get(k).end);
+                        }
+                    }
                 }
             }
         }
