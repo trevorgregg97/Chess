@@ -15,7 +15,7 @@ public abstract class Piece {
 	public Piece(Color color) {
 		this.color = color;
 	}
-	public abstract List<Move> generateMoves(Square pos, Board gameBoard);
+	public abstract List<Move> generateMoves(Square pos, Piece[][] board);
 	public abstract Piece copy();
 	public abstract List<Move> generateThreatenedSquares(Square pos, Piece[][] board);
 }

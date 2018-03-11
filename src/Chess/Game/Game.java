@@ -21,6 +21,18 @@ public class Game {
 		if(generateMoves().size() == 0){
 		    return true;
         }
+        Piece[][] board = getBoard();
+		int count = 0;
+        for(int i = 0; i < 8; i++){
+			for(int j = 0; j < 8; j++){
+				if(board[i][j] != null){
+					count++;
+				}
+			}
+		}
+		if(count == 2){
+        	return true;
+		}
         return false;
 	}
 	
@@ -60,10 +72,10 @@ public class Game {
 			for(int j = 0; j < 8; j++) {
 				if(pieces[i][j] != null && pieces[i][j].color == (board.isWhiteTurn ? Color.WHITE : Color.BLACK)) {
 					Square pos = new Square(i,j);
-					List<Move> pieceMoves = pieces[i][j].generateMoves(pos,board);
+					List<Move> pieceMoves = pieces[i][j].generateMoves(pos,board.board);
 					for(int k = 0; k < pieceMoves.size(); k++) {
                         Move move = pieceMoves.get(k);
-                        if(board.isLegal(move,false)){
+                        if(board.isLegal(move,true)){
                             moves.add(move);
                         }
                     }

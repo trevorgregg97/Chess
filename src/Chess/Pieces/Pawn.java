@@ -22,11 +22,10 @@ public class Pawn extends Piece {
 	
 	//Tells pawn where it is currently and the position of the board, returns all possible moves (doesn't check for if in check etc)
 	@Override
-	public List<Move> generateMoves(Square pos, Board gameBoard){
+	public List<Move> generateMoves(Square pos, Piece[][] board){
 	    int row = pos.row;
 	    int col = pos.col;
 		int side = color == Color.WHITE ? 1 : -1;
-		Piece[][] board = gameBoard.board;
 		List<Move> moves = new LinkedList<>();
 
         //Check if we can move forward, then check if we can capture or just move forward one.

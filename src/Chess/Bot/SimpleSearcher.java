@@ -17,6 +17,7 @@ public class SimpleSearcher {
 		}
 		
 		List<Move> moves = game.generateMoves();
+		System.out.println(moves);
 		if(moves.isEmpty()) {
 			return new BestMove<>(0);
 			//Change to check if its a draw or mate

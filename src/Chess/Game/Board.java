@@ -19,16 +19,18 @@ public class Board {
 	
 	public Board() {
 		board = new Piece[8][8];
-		whiteKing = new Square(2,2);
+		whiteKing = new Square(0,4);
 		blackKing = new Square(7,4);
         fillBoard(board);
+        isWhiteTurn = true;
 	}
 	
-	private Board(Piece[][] board, Piece delPiece, Square delStart, Square delEnd) {
+	private Board(Piece[][] board, Piece delPiece, Square delStart, Square delEnd,boolean isWhiteTurn) {
 		this.board = board;
 		this.delPiece = delPiece;
 		this.delEnd = delEnd;
 		this.delStart = delStart;
+		this.isWhiteTurn = isWhiteTurn;
 	}
 	
 	private void fillBoard(Piece[][] board) {
@@ -108,6 +110,12 @@ public class Board {
 		board[rowEnd][colEnd] = move.piece;
 		move.piece.hasMoved = true;
 		isWhiteTurn = !isWhiteTurn;
+		if(move.start.equals(whiteKing)){
+			whiteKing = move.end;
+		}
+		if(move.start.equals(blackKing)){
+			blackKing = move.end;
+		}
 		return true;
 	}
 
@@ -115,17 +123,19 @@ public class Board {
 	    Set<Square> threats = new HashSet<>();
 	    for(int i = 0; i < 8; i++){
 	        for(int j = 0; j < 8; j++){
-	            if(board[i][j] != null && board[i][j].color == (isWhiteTurn ? Color.WHITE : Color.BLACK)){
-	                Set<Square> pieceThreats = new HashSet<>();
+	            //TODO LOOK AT THIS MAYBE WRONG COLOR?
+                
+	            if(board[i][j] != null && board[i][j].color == (isWhiteTurn ? Color.BLACK : Color.WHITE)){
                     List<Move> pieceThreatsList =  board[i][j].generateThreatenedSquares(new Square(i,j), board);
                     for(int k = 0; k < pieceThreatsList.size(); k++){
                         if(isLegal(pieceThreatsList.get(k),true)){
-                            pieceThreats.add(pieceThreatsList.get(k).end);
+                            threats.add(pieceThreatsList.get(k).end);
                         }
                     }
                 }
             }
         }
+        System.out.println(threats);
         return threats;
     }
 
@@ -140,7 +150,7 @@ public class Board {
 		if(delPiece != null) {
 			newDelPiece = delPiece.copy();
 		}
-		return new Board(copiedPieces, newDelPiece,delStart, delEnd);
+		return new Board(copiedPieces, newDelPiece,delStart, delEnd,isWhiteTurn);
 	}
 	
 	@Override
